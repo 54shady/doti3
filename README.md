@@ -1,3 +1,7 @@
-# Usage
+# My i3 config
 
-	git clone git@github.com:54shady/doti3.git .i3
+## 字体
+
+- [font-awesome](http://fortawesome.github.io/Font-Awesome/cheatsheet/)
+
+- 复制到/usr/share/fonts/下即可
