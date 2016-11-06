@@ -1,5 +1,5 @@
 set $mod  Mod4
-font pango:monaco 20
+font pango:monaco 16
 
 floating_modifier $mod
 
@@ -116,8 +116,9 @@ bindsym $mod+x mode "resize"
 # finds out, if available)
 bar {
 		status_command conky -c $HOME/.i3/conkyrc_bar
+		#status_command i3status
 		position top
-		mode hide
+		mode dock
 		strip_workspace_numbers yes
 }
 
@@ -132,6 +133,7 @@ bar {
 #######################################################################
 exec i3-config-wizard
 exec fcitx
+exec --no-startup-id volumeicon
 
 # 取消工作区边缘的边框
 hide_edge_borders both

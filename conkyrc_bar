@@ -18,14 +18,14 @@ cpu_avg_samples 2
 
 TEXT
  ${upspeed enp5s0}/s  ${downspeed enp5s0}/s \
- ${cpu cpu0}% \
- ${cpu cpu1}% \
- ${cpu cpu2}% \
- ${cpu cpu3}% \
- ${cpu cpu4}% \
- ${cpu cpu5}% \
- ${cpu cpu6}% \
- ${cpu cpu7}% \
- ${mem} \
+cpu0 ${cpu cpu0}% \
+cpu1 ${cpu cpu1}% \
+cpu2 ${cpu cpu2}% \
+cpu3 ${cpu cpu3}% \
+cpu4 ${cpu cpu4}% \
+cpu5 ${cpu cpu5}% \
+cpu6 ${cpu cpu6}% \
+cpu7 ${cpu cpu7}% \
+RAM ${mem} \
 ${execi 1 amixer | grep -A10 'Master' | sed -rn 's/.*\[([0-9]+%)\].*\[(on|off)\]/\2 \1/p' | sed -n '1p' | sed 's/off.*/ /' | sed -r 's/on( [01234]?[0-9]%)/\1/' | sed -r 's/(on|) 0%/ 0%/' | sed -r 's/on//'} \
- ${time %H:%M}
+${time %H:%M}
