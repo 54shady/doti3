@@ -67,9 +67,9 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
 # switch to workspace 3 workspaces are enough
-set $WS1  1:  
-set $WS2  2:  
-set $WS3  3:  
+set $WS1  1: 
+set $WS2  2: 
+set $WS3  3:
 
 bindsym $mod+1 workspace $WS1
 bindsym $mod+2 workspace $WS2
@@ -115,7 +115,9 @@ bindsym $mod+x mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+		status_command conky -c $HOME/.i3/conkyrc_bar
+		position top
+		mode hide
 		strip_workspace_numbers yes
 }
 
@@ -135,3 +137,21 @@ exec fcitx
 hide_edge_borders both
 # 在三种边框类型中切换
 bindsym $mod+b border toggle
+
+# PM
+mode  "(s)leep (h)ybernate (p)owersave (r)estart shut(d)own" {
+        bindsym s exec sudo pm-suspend; mode "default"
+        bindsym h exec sudo pm-hibernate; mode "default"
+        bindsym p exec sudo pm-powersave; mode "default"
+        bindsym d exec sudo 'shutdown -h now'; mode "default"
+        bindsym r exec sudo 'shutdown -r now'; mode "default"
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+n mode "(s)leep (h)ybernate (p)owersave (r)estart shut(d)own"
+
+# amixer
+bindsym $mod+Up exec --no-startup-id amixer -c 0 -q set Master 2dB+
+bindsym $mod+Down exec --no-startup-id amixer -c 0 -q set Master 2dB-
+#bindsym $mod+ exec --no-startup-id amixer -q set Master toggle
