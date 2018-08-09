@@ -199,7 +199,7 @@ bindsym $mod+c layout toggle split
 # change border style
 bindsym $mod+u border none
 bindsym $mod+n border normal
-bindsym $mod+o border 1pixel
+# bindsym $mod+o border 1pixel
 bindsym $mod+b border toggle
 
 # window focus
@@ -306,3 +306,13 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 exec_always terminator
 exec_always firefox
 exec_always thunderbird
+
+# Take a screenshot upon pressing $mod+x (select an area)
+bindsym --release $mod+x exec --no-startup-id import /tmp/latest-screenshot.png
+
+# Automatic back-and-forth when switching to the current workspace
+# toggle between the lastest two workspace
+workspace_auto_back_and_forth yes
+
+# move a window to a specific workspace and immediately switch to that workspace
+bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
