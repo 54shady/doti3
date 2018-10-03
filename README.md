@@ -24,4 +24,4 @@
 
 配置终端
 
-	cp terminator_config ~/.config/terminator/config
+	ln -s ~/.config/i3/terminator_config ~/.config/terminator/config
