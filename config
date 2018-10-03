@@ -4,6 +4,9 @@
 # Super key(mod4 =windows logo key/Command key)
 set $mod Mod4
 
+# using xrandr to figure out
+set $display_device_name "eDP1"
+
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
 #exec --no-startup-id nm-applet
@@ -96,7 +99,7 @@ bar {
     position top
     mode hide
     workspace_buttons yes
-    output DP-1
+    output $display_device_name
     tray_output primary
     tray_padding 0
     separator_symbol "|"
@@ -115,7 +118,7 @@ bar {
 }
 
 # tray icons(DP-1 is the display device's name,use the command "xrandr" to see.)
-exec --no-startup-id xrandr --output DP-1 --primary
+exec --no-startup-id xrandr --output $display_device_name --primary
 
 # external display device(use the command "xrandr" to see the display device name)
 #exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of DP-1
@@ -276,8 +279,8 @@ bindsym $mod+Shift+q mode "$mode_system"
 mode "$mode_system" {
     bindsym l exec --no-startup-id i3lock -c '#000000', mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym o exec --no-startup-id systemctl poweroff, mode "default"
+    bindsym r exec --no-startup-id reboot, mode "default"
+    bindsym o exec --no-startup-id poweroff, mode "default"
     bindsym Escape mode "default"
 }
 
@@ -302,10 +305,12 @@ bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
 # exit i3
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# auto start the terminator application
-exec_always terminator
-exec_always firefox
-exec_always thunderbird
+# auto start application
+set $terminal "terminator"
+set $browsers "firefox-bin"
+exec_always $terminal
+exec_always $browsers
+#exec_always thunderbird
 
 # Take a screenshot upon pressing $mod+x (select an area)
 bindsym --release $mod+x exec --no-startup-id import /tmp/latest-screenshot.png
@@ -316,3 +321,5 @@ workspace_auto_back_and_forth yes
 
 # move a window to a specific workspace and immediately switch to that workspace
 bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
+
+exec_always --no-startup-id LANG="zh_CN.UTF-8" fcitx &
