@@ -188,7 +188,8 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+Shift+space floating toggle
 
 # kill focused window($mod1=Alt)
-bindsym mod1+F4 kill
+# bindsym mod1+F4 kill
+bindsym $mod+q kill
 
 # hide | show window(minus is "-" and plus is "+".)
 bindsym $mod+minus move scratchpad
