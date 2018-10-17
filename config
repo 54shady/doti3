@@ -4,6 +4,13 @@
 # Super key(mod4 =windows logo key/Command key)
 set $mod Mod4
 
+# global variables
+# using xrandr to figure out display name
+set $display_device_name "DP-1"
+set $terminal_name "konsole"
+set $browsers_name "firefox"
+set $mail_client "thunderbird"
+
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
 #exec --no-startup-id nm-applet
@@ -20,16 +27,12 @@ bindsym $mod+d exec rofi -show run -lines 5
 #bindsym $mod+d exec rofi -show run -lines 5 -eh 2 -width 100 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 2 -font "System San Francisco Display 18" -hlfg "#9575cd"
 
 # terminal
-bindsym $mod+Return exec --no-startup-id terminator
+bindsym $mod+Return exec --no-startup-id $terminal_name
 # xfce drop down terminal
 #bindsym mod1+slash exec xfce4-terminal --drop-down
 
-# browsers--firefox chromium
-bindsym $mod+Shift+f exec firefox
-#bindsym $mod+Shift+c exec chromium
-
 # printscreen--scrot(Print=PrtSc/PrintScreen)
-bindsym $mod+Print exec scrot
+# bindsym $mod+Print exec scrot
 
 # GUI file manager
 bindsym $mod+e exec thunar
@@ -79,8 +82,7 @@ for_window [class="Catfish"] floating enable
 for_window [class="Xfce4-appfinder"] floating enable
 
 # wallpaper static mode
-#exec --no-startup-id feh --bg-scale "~/Pictures/wallpapers/wallpaper.jpg"
-exec_always feh --bg-scale ~/Pictures/wallpapers/wallpaper.jpg
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/wallpaper.jpg
 
 # random mode
 #exec --no-startup-id  ~/.config/i3/wallpaper.sh &
@@ -96,7 +98,7 @@ bar {
     position top
     mode hide
     workspace_buttons yes
-    output DP-1
+    output $display_device_name
     tray_output primary
     tray_padding 0
     separator_symbol "|"
@@ -110,12 +112,11 @@ bar {
     inactive_workspace #636d72 #2d2d2d #dedede
     urgent_workspace #ffffff #900000 #d23d32
     }
-
-#height 30
+	#height 30
 }
 
-# tray icons(DP-1 is the display device's name,use the command "xrandr" to see.)
-exec --no-startup-id xrandr --output DP-1 --primary
+# tray icons(use the command "xrandr" to find out device name.)
+exec --no-startup-id xrandr --output $display_device_name --primary
 
 # external display device(use the command "xrandr" to see the display device name)
 #exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of DP-1
@@ -126,16 +127,13 @@ exec --no-startup-id xrandr --output DP-1 --primary
 #workspace "3:Code" output DP-1
 #workspace "9:Mail" output DP-1
 
-# putting clients on specific workspaces
-#assign [class="Chromium"] 1
-#assign [class="code"] 3
-
+# assign specific application to specific workspaces
 # use "xprop" the find the class
 # WM_CLASS(STRING) will printout the class name
-# bind terminator to workspace1
-assign [class="Terminator"] $workspace1
+# bind terminal to workspace1
+assign [class="konsole"] $workspace1
 
-# bind firefox to workspace2
+# bind browser to workspace2
 assign [class="Firefox"] $workspace2
 
 # bind mail to workspace3
@@ -170,7 +168,7 @@ bindsym $mod+0 workspace $workspace10
 bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
-bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
@@ -186,6 +184,7 @@ bindsym $mod+Shift+space floating toggle
 
 # kill focused window($mod1=Alt)
 bindsym mod1+F4 kill
+#bindsym $mod+q kill
 
 # hide | show window(minus is "-" and plus is "+".)
 bindsym $mod+minus move scratchpad
@@ -292,20 +291,20 @@ bindsym $mod+Shift+r reload
 bindsym $mod+Shift+s restart
 
 # i3lock
- mode "i3lock: Return to lock/Escape to Cancel" {
-            bindsym Return mode "default" exec i3lock -I 600 -i /usr/share/wallpapers/lock/lock.jpg
-            bindsym Escape mode "default"
-    }
+mode "i3lock: Return to lock/Escape to Cancel" {
+		bindsym Return mode "default" exec i3lock -I 600 -i /usr/share/wallpapers/lock/lock.jpg
+		bindsym Escape mode "default"
+}
 
 bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
 
 # exit i3
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# auto start the terminator application
-exec_always terminator
-exec_always firefox
-exec_always thunderbird
+# auto start applications
+exec_always $terminal_name
+exec_always $browsers_name
+exec_always $mail_client
 
 # Take a screenshot upon pressing $mod+x (select an area)
 bindsym --release $mod+x exec --no-startup-id import /tmp/latest-screenshot.png
@@ -316,3 +315,6 @@ workspace_auto_back_and_forth yes
 
 # move a window to a specific workspace and immediately switch to that workspace
 bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
+
+# opups during fullscreen mode
+popup_during_fullscreen smart
