@@ -5,7 +5,10 @@
 set $mod Mod4
 
 # using xrandr to figure out
-set $display_device_name "eDP1"
+# laptop's main screen eDP1 1366x768
+# external VGA as a DP2 1920x1080
+set $primary_screen "eDP1"
+set $extern_screen "DP2"
 
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
@@ -30,9 +33,6 @@ bindsym $mod+Return exec --no-startup-id terminator
 # browsers--firefox chromium
 bindsym $mod+Shift+f exec firefox
 #bindsym $mod+Shift+c exec chromium
-
-# printscreen--scrot(Print=PrtSc/PrintScreen)
-bindsym $mod+Print exec scrot
 
 # GUI file manager
 bindsym $mod+e exec thunar
@@ -99,7 +99,7 @@ bar {
     position top
     mode hide
     workspace_buttons yes
-    output $display_device_name
+    output $primary_screen
     tray_output primary
     tray_padding 0
     separator_symbol "|"
@@ -117,11 +117,11 @@ bar {
 #height 30
 }
 
-# tray icons(DP-1 is the display device's name,use the command "xrandr" to see.)
-exec --no-startup-id xrandr --output $display_device_name --primary
+# tray icons(use "xrandr" to find out the screen name)
+exec --no-startup-id xrandr --output $primary_screen --primary
 
 # external display device(use the command "xrandr" to see the display device name)
-#exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of DP-1
+# exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of DP-1
 
 # Workspace names
 #workspace "1:Arch" output DP-1
@@ -324,3 +324,18 @@ workspace_auto_back_and_forth yes
 bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
 
 exec_always --no-startup-id LANG="zh_CN.UTF-8" fcitx &
+
+# Manual management of external displays
+set $mode_display Ext Screen ONE_SCREEN(o) DUAL_SCREEN(d)
+mode "$mode_display" {
+    bindsym o exec --no-startup-id xrandr --output $primary_screen --primary --output $extern_screen --off, mode "default"
+
+	# external screen on the right side of the primary screen
+    bindsym d exec --no-startup-id xrandr --output $extern_screen --auto --right-of $primary_screen, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+# Declare here the shortcut to bring the display selection menu
+bindsym $mod+Shift+x mode "$mode_display"
