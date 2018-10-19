@@ -8,7 +8,9 @@ set $mod Mod4
 # laptop's main screen eDP1 1366x768
 # external VGA as a DP2 1920x1080
 set $primary_screen "eDP1"
+set $primary_screen_resolution "1366x768"
 set $extern_screen "DP2"
+set $extern_screen_resolution "1920x1080"
 
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
@@ -99,8 +101,14 @@ bar {
     position top
     mode hide
     workspace_buttons yes
+
+	# bar display on both pri and ext screen
     output $primary_screen
-    tray_output primary
+    output $extern_screen
+
+	# tray notifications
+    tray_output $primary_screen
+
     tray_padding 0
     separator_symbol "|"
 
@@ -296,10 +304,10 @@ bindsym $mod+Shift+r reload
 bindsym $mod+Shift+s restart
 
 # i3lock
- mode "i3lock: Return to lock/Escape to Cancel" {
-            bindsym Return mode "default" exec i3lock -I 600 -i /usr/share/wallpapers/lock/lock.jpg
-            bindsym Escape mode "default"
-    }
+mode "i3lock: Return to lock/Escape to Cancel" {
+		bindsym Return mode "default" exec i3lock -I 600 -i /usr/share/wallpapers/lock/lock.jpg
+		bindsym Escape mode "default"
+}
 
 bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
 
@@ -311,7 +319,7 @@ set $terminal "terminator"
 set $browsers "firefox-bin"
 exec_always $terminal
 exec_always $browsers
-#exec_always thunderbird
+exec_always thunderbird
 
 # Take a screenshot upon pressing $mod+x (select an area)
 bindsym --release $mod+x exec --no-startup-id import /tmp/latest-screenshot.png
@@ -326,12 +334,19 @@ bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
 exec_always --no-startup-id LANG="zh_CN.UTF-8" fcitx &
 
 # Manual management of external displays
-set $mode_display Ext Screen ONE_SCREEN(o) DUAL_SCREEN(d)
+set $mode_display Ext Screen Pe(p) PE(d) pE(e) Mirror(m)
 mode "$mode_display" {
-    bindsym o exec --no-startup-id xrandr --output $primary_screen --primary --output $extern_screen --off, mode "default"
+	# primary on, external off
+    bindsym p exec --no-startup-id xrandr --output $primary_screen --auto --primary --output $extern_screen --off, mode "default"
 
-	# external screen on the right side of the primary screen
+	# primary on, external on(external screen on the right side of the primary screen)
     bindsym d exec --no-startup-id xrandr --output $extern_screen --auto --right-of $primary_screen, mode "default"
+
+	# primary off, external on
+	bindsym e exec --no-startup-id xrandr --output $extern_screen --auto --primary --output $primary_screen --off, mode "default"
+
+	# extern mirror primary
+	bindsysm m exec --no-startup-id xrandr --output $extern_screen --scale-from $primary_screen_resolution --same-as $primary_screen --primary, mode "default"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
