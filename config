@@ -1,5 +1,5 @@
-# mode1 = Alt key
-# mode = win key
+# Mod1 = Alt key
+# set win key as Mod4 mod key
 #
 # Super key(mod4 =windows logo key/Command key)
 set $mod Mod4
@@ -95,7 +95,6 @@ font pango:monaco 13
 
 # bar configuration
 bar {
-    #status_command i3status
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
 
     position top
@@ -354,3 +353,11 @@ mode "$mode_display" {
 }
 # Declare here the shortcut to bring the display selection menu
 bindsym $mod+Shift+x mode "$mode_display"
+
+# brightness control
+bindsym ctrl+Mod1+k exec "xbacklight +10; sh ~/.config/i3/show_brightness.sh"
+bindsym ctrl+Mod1+j exec "xbacklight -10; sh ~/.config/i3/show_brightness.sh"
+
+# Key indicators
+bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
