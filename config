@@ -263,6 +263,7 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 
+# Using xev to figure out the keysym
 # volume control
 # mod + PgUp to increase the volume
 # mod + PgDn to decrease the volume
