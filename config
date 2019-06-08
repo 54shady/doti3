@@ -4,13 +4,12 @@
 # Super key(mod4 =windows logo key/Command key)
 set $mod Mod4
 
-# using xrandr to figure out
-# laptop's main screen eDP1 1366x768
-# external VGA as a DP2 1920x1080
-set $primary_screen "eDP1"
-set $primary_screen_resolution "1366x768"
-set $extern_screen "DP2"
-set $extern_screen_resolution "1920x1080"
+# global variables
+# using xrandr to figure out display name
+set $display_device_name "default"
+set $terminal_name "konsole"
+set $browsers_name "firefox-bin"
+#set $mail_client "thunderbird"
 
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
@@ -28,13 +27,10 @@ bindsym $mod+d exec rofi -show run -lines 5
 #bindsym $mod+d exec rofi -show run -lines 5 -eh 2 -width 100 -padding 500 -opacity "80" -bw 0 -bc "$base01" -bg "$base02" -fg "$base07" -hlbg "$base05" -columns 2 -font "System San Francisco Display 18" -hlfg "#9575cd"
 
 # terminal
-bindsym $mod+Return exec --no-startup-id terminator
+bindsym $mod+Return exec --no-startup-id $terminal_name
 # xfce drop down terminal
 #bindsym mod1+slash exec xfce4-terminal --drop-down
 
-# browsers--firefox chromium
-bindsym $mod+Shift+f exec firefox
-#bindsym $mod+Shift+c exec chromium
 
 # GUI file manager
 bindsym $mod+e exec thunar
@@ -76,7 +72,7 @@ for_window [class="mpv"] floating enable
 for_window [class="Gimp"] floating enable
 for_window [class="Xarchiver"] floating enable
 for_window [class="Genymotion"] floating enable
-for_window [class="Vlc"] floating enable
+#for_window [class="Vlc"] floating enable
 #for_window [class="VirtualBox"] floating enable
 #for_window [class="Thunar"] floating enable
 for_window [class="shadowsocks-qt5"] floating enable
@@ -95,21 +91,14 @@ font pango:monaco 13
 
 # bar configuration
 bar {
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    #status_command i3status
+    #status_command i3blocks -c ~/.config/i3/i3blocks.conf
 
     position top
     mode hide
-    workspace_buttons yes
-
-	# bar display on both pri and ext screen
-    output $primary_screen
-    output $extern_screen
-
-	# tray notifications
-    tray_output $primary_screen
-
-    tray_padding 0
-    separator_symbol "|"
+    #workspace_buttons yes
+    #tray_padding 0
+    #separator_symbol "|"
 
     colors {
     background #285477
@@ -120,12 +109,10 @@ bar {
     inactive_workspace #636d72 #2d2d2d #dedede
     urgent_workspace #ffffff #900000 #d23d32
     }
-
-#height 30
 }
 
 # tray icons(use "xrandr" to find out the screen name)
-exec --no-startup-id xrandr --output $primary_screen --primary
+#exec --no-startup-id xrandr --output $primary_screen --primary
 
 # external display device(use the command "xrandr" to see the display device name)
 # exec --no-startup-id xrandr --output HDMI1 1920*1080 --right-of DP-1
@@ -136,16 +123,13 @@ exec --no-startup-id xrandr --output $primary_screen --primary
 #workspace "3:Code" output DP-1
 #workspace "9:Mail" output DP-1
 
-# putting clients on specific workspaces
-#assign [class="Chromium"] 1
-#assign [class="code"] 3
-
+# assign specific application to specific workspaces
 # use "xprop" the find the class
 # WM_CLASS(STRING) will printout the class name
-# bind terminator to workspace1
-assign [class="Terminator"] $workspace1
+# bind terminal to workspace1
+assign [class="konsole"] $workspace1
 
-# bind firefox to workspace2
+# bind browser to workspace2
 assign [class="Firefox"] $workspace2
 
 # bind mail to workspace3
@@ -153,6 +137,9 @@ assign [class="Thunderbird"] $workspace3
 
 # bind virtual box to workspace4
 assign [class="VirtualBox"] $workspace4
+
+# bind vlc to workspace5
+assign [class="Vlc"] $workspace5
 
 # switch to near workspace
 bindsym $mod+Tab workspace next
@@ -162,6 +149,7 @@ set $workspace1 ""
 set $workspace2 ""
 set $workspace3 ""
 set $workspace4 ""
+set $workspace5 5
 set $workspace10 ""
 
 # switch to workspace
@@ -169,7 +157,7 @@ bindsym $mod+1 workspace $workspace1
 bindsym $mod+2 workspace $workspace2
 bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
-bindsym $mod+5 workspace 5
+bindsym $mod+5 workspace $workspace5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
@@ -180,7 +168,7 @@ bindsym $mod+0 workspace $workspace10
 bindsym $mod+Shift+1 move container to workspace $workspace1
 bindsym $mod+Shift+2 move container to workspace $workspace2
 bindsym $mod+Shift+3 move container to workspace $workspace3
-bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
@@ -276,9 +264,12 @@ mode "resize" {
 }
 
 # volume control
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -c 0 -q set Master 2dB+ unmute
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer -c 0 -q set Master 2dB- unmute
-bindsym XF86AudioMute exec --no-startup-id amixer -q set Master toggle
+# mod + PgUp to increase the volume
+# mod + PgDn to decrease the volume
+# mod + Delete to mute toggle
+bindsym $mod+Prior exec --no-startup-id amixer -c 0 -q set Master 2dB+ unmute
+bindsym $mod+Next exec --no-startup-id amixer -c 0 -q set Master 2dB- unmute
+bindsym $mod+Delete exec --no-startup-id amixer -q set Master toggle
 
 # power manager
 # Alt+shift+q+[l | e | r | o | esc]
@@ -313,12 +304,11 @@ bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
 # exit i3
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# auto start application
-set $terminal "terminator"
-set $browsers "firefox-bin"
-exec_always $terminal
-exec_always $browsers
-exec_always thunderbird
+# auto start applications
+exec_always $terminal_name
+exec_always $browsers_name
+exec_always "vlc"
+#exec_always $mail_client
 
 # Take a screenshot upon pressing $mod+x (select an area)
 bindsym --release $mod+x exec --no-startup-id import /tmp/latest-screenshot.png
@@ -330,34 +320,13 @@ workspace_auto_back_and_forth yes
 # move a window to a specific workspace and immediately switch to that workspace
 bindsym $mod+o move container to workspace $workspace10; workspace $workspace10
 
-exec_always --no-startup-id LANG="zh_CN.UTF-8" fcitx &
-
-# Manual management of external displays
-set $mode_display Ext Screen Pe(p) PE(d) pE(e) Mirror(m)
-mode "$mode_display" {
-	# primary on, external off
-    bindsym p exec --no-startup-id xrandr --output $primary_screen --auto --primary --output $extern_screen --off, mode "default"
-
-	# primary on, external on(external screen on the right side of the primary screen)
-    bindsym d exec --no-startup-id xrandr --output $extern_screen --auto --right-of $primary_screen, mode "default"
-
-	# primary off, external on
-	bindsym e exec --no-startup-id xrandr --output $extern_screen --auto --primary --output $primary_screen --off, mode "default"
-
-	# extern mirror primary
-	bindsysm m exec --no-startup-id xrandr --output $extern_screen --scale-from $primary_screen_resolution --same-as $primary_screen --primary, mode "default"
-
-    # back to normal: Enter or Escape
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-# Declare here the shortcut to bring the display selection menu
-bindsym $mod+Shift+x mode "$mode_display"
+# opups during fullscreen mode
+popup_during_fullscreen smart
 
 # brightness control
-bindsym ctrl+Mod1+k exec "xbacklight +10; sh ~/.config/i3/show_brightness.sh"
-bindsym ctrl+Mod1+j exec "xbacklight -10; sh ~/.config/i3/show_brightness.sh"
+#bindsym ctrl+Mod1+k exec "xbacklight +10; sh ~/.config/i3/show_brightness.sh"
+#bindsym ctrl+Mod1+j exec "xbacklight -10; sh ~/.config/i3/show_brightness.sh"
 
 # Key indicators
-bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
-bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
+#bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+#bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
