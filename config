@@ -14,7 +14,7 @@ set $browsers_name "firefox-bin"
 #exec --no-startup-id xcompmgr &
 #exec --no-startup-id mate-power-manager
 #exec --no-startup-id nm-applet
-#exec --no-startup-id fcitx
+exec --no-startup-id fcitx
 #exec --no-startup-id ibus
 #exec --no-startup-id megasync
 #exec --no-startup-id redshift
@@ -33,7 +33,7 @@ bindsym $mod+Return exec --no-startup-id $terminal_name
 
 
 # GUI file manager
-bindsym $mod+e exec thunar
+bindsym $mod+e exec dolphin
 #bindsym $mod+e exec --no-startup-id thunar
 
 # app finder
@@ -268,9 +268,9 @@ mode "resize" {
 # mod + PgUp to increase the volume
 # mod + PgDn to decrease the volume
 # mod + Delete to mute toggle
-bindsym $mod+Prior exec --no-startup-id amixer -c 0 -q set Master 2dB+ unmute
-bindsym $mod+Next exec --no-startup-id amixer -c 0 -q set Master 2dB- unmute
-bindsym $mod+Delete exec --no-startup-id amixer -q set Master toggle
+bindsym $mod+Prior exec --no-startup-id "amixer -c 0 -q set Master 2dB+ unmute; sh ~/.i3/show_volume.sh"
+bindsym $mod+Next exec --no-startup-id "amixer -c 0 -q set Master 2dB- unmute; sh ~/.i3/show_volume.sh"
+bindsym $mod+Delete exec --no-startup-id "amixer -q set Master toggle; sh ~/.i3/show_volume.sh"
 
 # power manager
 # Alt+shift+q+[l | e | r | o | esc]
